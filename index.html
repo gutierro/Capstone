@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Capstone Project</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Capstone Project">
+  <meta name="author" content="Roberto Gutierrez">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Capstone Project</h1>
+    <h2>Coursera - Johns Hopkins University, Data Science</h2>
+    <p>Roberto Gutierrez<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Data Science Capstone Project</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br /></p>
+
+<h4>Project Description</h4>
+
+<p><br />
+Build a &quot;Shiny&quot; application on top of a prediction algorithm with an interface that accepts text as input and display the predicted words.
+<br />
+<br /></p>
+
+<h4>How to use the application</h4>
+
+<p><br />
+Type your text in Text Input box and click Submit and the application will suggest the next word. Five suggested words will appear in the text box below. The application only works with English language.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>The Prediction Algorithm (part I)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The prediction algorithm is based on a Trigram <a href="https://en.wikipedia.org/wiki/Katz%27s_back-off_model">Katz&#39;s back-off Model</a> which estimates the conditional probability of a word given the history in the 3-gram and 2-gram extracted from the corpus.</p>
+
+<p><img src="Katz.png"/></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>The Prediction Algorithm (part II)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br /></p>
+
+<p>In the Katz&#39;s back-off model the conditional probability of a word (wi) is discounted by the Good–Turing smoothing estimation.
+<br /></p>
+
+<p>Before using Katz&#39;s predicting algorithm the 3-gram and 2-gram have been extracted from the corpus and the <a href="https://en.wikipedia.org/wiki/Good%C3%A2%E2%82%AC%E2%80%9CTuring">Good-Turing</a> discount calculated for the 3-gram and 2-gram.
+<br /></p>
+
+<p>The calculation of the Good-Turing discount factors were performed following the method in the reference publication.
+<a href="http://www.d.umn.edu/%7Etpederse/Courses/CS8761-FALL02/Code/sgt-gale.pdf">Gale William A. AT&amp;T Bell Laboratories. Good-Turing Smoothing Without Tears. </a>
+(see sample code on the last slides)
+<br /></p>
+
+<p>When the algorithm doesn&#39;t find any match for the input text in the 3-gram or 2-gram, the output will display the five most frequent words (1-gram) in the corpus.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Obtaining the n-gram (part I)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h4>Pre-processing the corpus previously to extracting the n-gram.</h4>
+
+<p><br />
+The characters that are not relevant for the words prediction are removed from the corpus, therefore the size of the n-gram will be smaller.</p>
+
+<h5>1. Converting to lower case.</h5>
+
+<p>Key sensitive doesn&#39;t affect the word prediction despite the grammatical rules for capitalizing letter in words.
+<br /></p>
+
+<h5>2. Removing special characters and punctuation.</h5>
+
+<p>The dot &quot;.&quot; as marker of the end of a phrase has been removed as well as  the dash &quot;-&quot; between words, however the single quote (&#39;) to include the most common short forms in English (e.g. I&#39;m, he&#39;s,...)
+<br /></p>
+
+<h5>3. Removing numbers.</h5>
+
+<p>Numbers don&#39;t affect the word prediction.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Obtaining the n-gram (part II)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br /></p>
+
+<h4>Problem with the size of n-gram</h4>
+
+<p>The size of the n-gram obtain is of 5Gb for 3-gram and 2Gb for the 2-gram, too big for the memory of a normal mobile device as well as making the computing time too long.</p>
+
+<h4>Scaling the size of n-gram</h4>
+
+<p>By eliminating those n-gram with low frequency the error rate doesn&#39;t change significantly, <a href="(https://www.cs.cmu.edu/%7Eroni/papers/scalable-TR-96-139.pdf)">Seymore K. and Resenfeld R. 1996. Scalable Trigram Backoff Language Models.</a> 
+<br /></p>
+
+<p>Only the 3-gram and 2-gram that occur more than once are being considered, reducing the memory usage by ~85%.
+<br /></p>
+
+<p>As a result the size of the 3-gram was ~700Mb and that of the 2-gram was ~350Mb.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Sample Code - Discount Factors I</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">######
+#Good-Turing smoothing functions
+######
+
+nrzest&lt;-function(r, nr)
+{
+        d &lt;- c(1, diff(r))
+        dr &lt;- c(0.5 * (d[-1] + d[ - length(d)]), d[length(d)])
+        return(nr/dr)
+}
+
+rstest&lt;-function(r, coef)
+{
+        return(r * (1 + 1/r)^(1 + coef[2]))
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Sample Code - Discount Factors II</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">gt_discount&lt;-function(df){
+        w&lt;-data.frame(table(df$freq))
+        r&lt;-as.numeric(levels(w$Var1))
+        Nr&lt;-as.numeric(w$Freq)
+
+        N&lt;-sum(r*Nr)
+
+        #make averaging transform
+        Zr&lt;-nrzest(r,Nr)
+
+        #get Linear Good-Turing estimate
+
+        fit&lt;-lm(log(Zr)~log(r))
+
+        coef&lt;-fit$coef
+        r_gt&lt;-rstest(r,coef)
+        d&lt;-r_gt/r
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Sample Code - Discount Factors III</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">        #get Turing estimate
+        j&lt;-r==c(r[-1]-1,0)
+        d_GT&lt;-d_T&lt;-rep(0,length(r))
+
+        d_T[j]&lt;-(r[j]+1)/r[j]*c(Nr[-1],0)[j]/Nr[j]
+
+        #Good-Turing discount factor
+        #make switch from Turing to LGT estimates
+        tursd&lt;-rep(1,length(r))
+        for(i in 1:length(r))if(j[i])
+                tursd[i]&lt;-(i+1)/Nr[i]*sqrt(Nr[i+1]*(1+Nr[i+1]/Nr[i]))
+        useturing&lt;-TRUE
+        for(i in 1:length(r)){
+                if(!useturing) d_GT[i]&lt;-d[i]
+                else if(abs(d-d_T)[i]*i/tursd[i] &gt; 1.65)
+                        d_GT[i]&lt;-d_T[i]
+                else {useturing&lt;-FALSE; d_GT[i]&lt;-d[i]}
+        }
+
+#         d_GT[1:5]&lt;-d_T[1:5]
+#         d_GT[6:length(r)]&lt;-d[6:length(r)]
+
+        #renormalize the probabilities for observed objects
+        sumpraw&lt;-sum(d_GT*r*Nr/N)
+        d_GT&lt;-d_GT*(1-Nr[1]/N)/sumpraw
+
+        return(data.frame(r,d_GT))
+
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Data Science Capstone Project'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='The Prediction Algorithm (part I)'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='The Prediction Algorithm (part II)'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Obtaining the n-gram (part I)'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Obtaining the n-gram (part II)'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Sample Code - Discount Factors I'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Sample Code - Discount Factors II'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Sample Code - Discount Factors III'>
+         8
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
